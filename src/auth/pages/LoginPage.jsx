@@ -1,9 +1,18 @@
-import LayoutAuth from "../layout/LayoutAuth";
+import { useDispatch, useSelector } from 'react-redux'
 import { Formik } from "formik";
+
+import LayoutAuth from "../layout/LayoutAuth";
+import { signIn } from '../../store';
+
+
 
 
 const LoginPage = () => {
   const assetsPath = import.meta.env.VITE_ASSETS_AUTH;
+
+
+  const dispatch = useDispatch()
+  const { message } = useSelector(state => state.auth)
 
 
   return (
@@ -19,7 +28,7 @@ const LoginPage = () => {
             Sign in to your account
           </h2>
         </div>
-
+        {message && <div className="text-red-500 text-center">{message}</div>}
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <Formik
             initialValues={{ email: "", password: "" }}
@@ -35,7 +44,7 @@ const LoginPage = () => {
               return errors;
             }}
             onSubmit={(values) => {
-              console.log(values);
+              dispatch(signIn(values))
             }}
           >
             {({
@@ -45,7 +54,6 @@ const LoginPage = () => {
               handleChange,
               handleBlur,
               handleSubmit,
-              isSubmitting,
               /* and other goodies */
             }) => (
               <form className="space-y-6" onSubmit={handleSubmit}>
@@ -96,7 +104,6 @@ const LoginPage = () => {
               {errors.password && touched.password && errors.password}
                 <button
                   type="submit" 
-                  disabled={isSubmitting}
                   className="flex w-full justify-center rounded-md bg-cyanLight px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Sign in

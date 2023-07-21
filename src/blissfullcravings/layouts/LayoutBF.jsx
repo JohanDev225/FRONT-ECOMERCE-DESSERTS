@@ -1,8 +1,11 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
+import { useSelector } from 'react-redux'
 
 const LayoutBF = ({ children }) => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
+
+  const { message } = useSelector(state => state.auth)
 
   return (
     <div >

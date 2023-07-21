@@ -5,6 +5,8 @@ const LayoutAuth = ({ children }) => {
   const assetsPath = import.meta.env.VITE_ASSETS_AUTH;
   let location = useLocation();
 
+ 
+
   return (
     <div>
       <header>
