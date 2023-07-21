@@ -1,6 +1,9 @@
+import { LayoutBF } from "../layouts";
 const Products = () => {
   return (
-    <div>Products</div>
+    <LayoutBF>
+    <h1>Products</h1>
+  </LayoutBF>
   )
 }
 

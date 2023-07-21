@@ -8,7 +8,7 @@ export const BKCRoutes = () => {
   return (
     <Routes>
         <Route path="/" element={ <HomePage /> } />
-        <Route path="/" element={ <Products /> } />
+        <Route path="/products" element={ <Products /> } />
 
         <Route path="/*" element={ <Navigate to="/" /> } />
     </Routes>

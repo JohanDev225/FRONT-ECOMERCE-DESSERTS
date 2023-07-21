@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 
 const LayoutBF = ({ children }) => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
@@ -9,25 +10,28 @@ const LayoutBF = ({ children }) => {
       <nav className="relative container mx-auto p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-20">
-          <img src={`${assetsPath}/logo.svg`} alt="" />
+          <NavLink to="/">
+            <img src={`${assetsPath}/logo.svg`} alt="" />
+          </NavLink>
+        
           <div className="hidden space-x-8 font-bold lg:flex">
-            <a href="#" className="text-graylight hover:text-darkOrange"
-              >Products</a
-            >
+            <NavLink to="/products" className="text-graylight hover:text-darkOrange"
+              >Products
+            </NavLink>
           </div>
         </div>
 
         <div
           className="hidden items-center space-x-6 font-bold text-graylight lg:flex"
         >
-          <a href="#" className="text-graylight hover:text-darkOrange"
-              >Login</a
-            >
-          <a
-            href="#"
+          <NavLink to="/auth/login" className="text-graylight hover:text-darkOrange"
+              >Login
+            </NavLink>
+          <NavLink
+            to="/auth/register"
             className="px-8 py-3 font-bold text-white bg-cyan rounded-full hover:bg-cyanLight"
-            >Sign Up</a
-          >
+            >Sign Up
+          </NavLink>
         </div>
 
         <button
