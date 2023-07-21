@@ -3,7 +3,7 @@ const Process = () => {
 
   return (
     <>
-          <section className="py-24 bg-footer bg-no-repeat bg-cover bg-center">
+    <section className="py-24 bg-footer bg-no-repeat bg-cover bg-center">
       <div className="flex flex-col p-2 space-y-6 backdrop-blur-sm">
         <h5
           className="mx-auto space-y-10 text-5xl font-bold text-center text-white "

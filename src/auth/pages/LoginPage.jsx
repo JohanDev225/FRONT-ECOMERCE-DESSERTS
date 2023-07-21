@@ -4,17 +4,24 @@ import { Formik } from "formik";
 import LayoutAuth from "../layout/LayoutAuth";
 import { signIn } from '../../store';
 
-
-
+import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
 
 const LoginPage = () => {
   const assetsPath = import.meta.env.VITE_ASSETS_AUTH;
-
+  const navigate = useNavigate();
 
   const dispatch = useDispatch()
-  const { message } = useSelector(state => state.auth)
+  const { uid, message } = useSelector(state => state.auth)
 
-
+ 
+  useEffect(() => {
+    //redireccionar al home
+    if (uid) {
+      navigate("/", { replace: true })
+    }
+  }, [uid, navigate])
+  
   return (
     <LayoutAuth>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-32 lg:px-8">
