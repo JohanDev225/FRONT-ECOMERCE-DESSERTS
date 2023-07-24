@@ -1,14 +1,36 @@
 import { backApi } from "../../../api/axiosApi";
-import { logout, login, badCredentials } from "./authSlice"
+import { logout, register, userInfo, login, bad } from "./authSlice"
 
+//funcion que registra un usuario en la base de datos
+export const signUp = (values) => {
+    return async (dispatch) => {
+        try {
+            const {data} = await backApi.post('/signup', values);
+            if (data.code === "400") {
+                const message = {
+                    type: 'register',
+                    text: data.message,
+                }
+                dispatch(bad(message))
+            }else{
+                dispatch(register(data))
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+//funcion que hace el login y guarda el token en el localstorage
 export const signIn = (values) => {
     return async (dispatch) => {
         try {
             const {data} = await backApi.post('/signin', values);
-            console.log(data);
-            if (data.code === 400) {
-                console.log('bad credentials');
-                dispatch(badCredentials(data))
+            if (data.code === "400") {
+                const message = {
+                    type: 'login',
+                    text: data.message,
+                }
+                dispatch(bad(message))
             }else{
             dispatch(login(data))
             //mantener la sesion
@@ -19,6 +41,18 @@ export const signIn = (values) => {
         } 
     }
 }
+
+//funcion que obtiene la informacion del usuario
+export const getUserInfo = (values) => {
+    return async (dispatch) => {
+        try {
+            dispatch(userInfo(values))
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
 
 //funcion que obtiene el token del localstorage
 export const isAuth = () => {
@@ -34,7 +68,7 @@ export const isAuth = () => {
         }
     }
 }
-
+// funcion que elimina el token del localstorage y cierra la sesion
 export const signOut = () => {
     return async (dispatch) => {
         try {
@@ -45,5 +79,3 @@ export const signOut = () => {
         }
     }
 }
-
-

@@ -1,11 +1,49 @@
 import PropTypes from "prop-types";
+import { useEffect, useCallback } from "react";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
+import { BiCartAlt } from "react-icons/bi";
+import { isExpired, decodeToken } from "react-jwt";
+
+import { isAuth, getUserInfo } from "../../store";
 const LayoutBF = ({ children }) => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
 
-  const { uid } = useSelector((state) => state.auth);
+  const { uid, expired } = useSelector((state) => state.auth);
+
+  //setear token
+  const token = localStorage.getItem("token");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const myDecodedToken = () => {
+      const infoUser = {
+        role: decodeToken(token).role,
+        expired: isExpired(token),
+      };
+      return infoUser;
+  };
+
+  const dispatchUserInfo = useCallback(() => {
+    if (token) {
+      dispatch(isAuth(token));
+      dispatch(getUserInfo(myDecodedToken()));
+    }
+  }, [token]);
+
+  useEffect(() => {
+    dispatchUserInfo();
+  }, [dispatchUserInfo]);
+
+  useEffect(() => {
+    if (expired) {
+      localStorage.removeItem("token");
+      navigate("/", { replace: true });
+    }
+  }, [expired]);
 
   return (
     <div>
@@ -28,7 +66,7 @@ const LayoutBF = ({ children }) => {
             </div>
 
             <div className="hidden items-center space-x-6 font-bold text-graylight lg:flex">
-              {!uid && (
+              {!uid ? (
                 <>
                   <NavLink
                     to="/auth/login"
@@ -43,6 +81,13 @@ const LayoutBF = ({ children }) => {
                     Sign Up
                   </NavLink>
                 </>
+              ) : (
+                <NavLink
+                  to="/auth/login"
+                  className="text-3xl text-graylight hover:text-darkOrange"
+                >
+                  <BiCartAlt />
+                </NavLink>
               )}
             </div>
 

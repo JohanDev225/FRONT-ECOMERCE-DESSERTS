@@ -1,26 +1,28 @@
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from "react-router-dom";
+
 import { Formik } from "formik";
+import { toast } from 'react-toastify';
 
 import LayoutAuth from "../layout/LayoutAuth";
 import { signIn } from '../../store';
-
-import { useNavigate } from "react-router-dom";
-import { useEffect } from 'react';
 
 const LoginPage = () => {
   const assetsPath = import.meta.env.VITE_ASSETS_AUTH;
   const navigate = useNavigate();
 
   const dispatch = useDispatch()
-  const { uid, message } = useSelector(state => state.auth)
+  const { status, message } = useSelector(state => state.auth)
 
  
   useEffect(() => {
     //redireccionar al home
-    if (uid) {
+    if (status === "authenticated") {
       navigate("/", { replace: true })
     }
-  }, [uid, navigate])
+  }, [status, navigate])
+  
   
   return (
     <LayoutAuth>
@@ -35,7 +37,8 @@ const LoginPage = () => {
             Sign in to your account
           </h2>
         </div>
-        {message && <div className="text-red-500 text-center">{message}</div>}
+        {message && message.type === "login" && toast(message.text, { type: "error" })}
+        {message && message.type === "login-success" && toast(message.text)}
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <Formik
             initialValues={{ email: "", password: "" }}

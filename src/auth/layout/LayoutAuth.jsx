@@ -1,11 +1,10 @@
 import PropTypes from "prop-types";
 import { NavLink, useLocation } from "react-router-dom";
 
+
 const LayoutAuth = ({ children }) => {
   const assetsPath = import.meta.env.VITE_ASSETS_AUTH;
   let location = useLocation();
-
- 
 
   return (
     <div>

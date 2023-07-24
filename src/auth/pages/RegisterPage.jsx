@@ -1,7 +1,43 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from "react-router-dom";
+
 import LayoutAuth from "../layout/LayoutAuth";
 import { Formik } from "formik";
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+
+import { signUp } from '../../store';
+
+
 const RegisterPage = () => {
   const assetsPath = import.meta.env.VITE_ASSETS_AUTH;
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch()
+  const { status, message } = useSelector(state => state.auth)
+
+ 
+   useEffect(() => {
+     //redireccionar al home
+     if (status === "registered") {
+       navigate("/auth/login", { replace: true })
+     }
+   }, [status, navigate,])
+
+
+  const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(2, 'Too Short!')
+      .max(50, 'Too Long!')
+      .required('Required'),
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string()
+    .required('No password provided.') 
+    .min(8, 'Password is too short - should be 8 chars minimum.')
+    .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
+  });
 
   return (
     <LayoutAuth>
@@ -16,24 +52,15 @@ const RegisterPage = () => {
             Sign Up in our platform to get a carv
           </h2>
         </div>
-
+        {message && message.type === "register" && toast(message.text, { type: "error" })}
+        {message && message.type === "register-success" && toast(message.text)}
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <Formik
             initialValues={{ name: "", email: "", password: "" }}
-            validate={(values) => {
-              const errors = {};
-              if (!values.email) {
-                errors.email = "Required";
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = "Invalid email address";
-              }
-              return errors;
-            }}
+            validationSchema={SignupSchema}
 
             onSubmit={(values) => {
-              console.log(values);
+              dispatch(signUp(values))
             }}
           >
             {({
@@ -43,7 +70,6 @@ const RegisterPage = () => {
               handleChange,
               handleBlur,
               handleSubmit,
-              isSubmitting,
               /* and other goodies */
             }) => (
               <form className="space-y-6" onSubmit={handleSubmit}>
@@ -65,6 +91,7 @@ const RegisterPage = () => {
                   >
                     Nombre y Apellido<span className="text-red-500">*</span>
                   </label>
+                  {errors.name && <div className="text-red-500">{errors.name}</div>}
                 </div>
                 <div className="relative z-0 w-full mb-6 group">
                   <input
@@ -83,6 +110,7 @@ const RegisterPage = () => {
                   >
                     Email Address<span className="text-red-500">*</span>
                   </label>
+                  {errors.email && <div className="text-red-500">{errors.email}</div>}
                 </div>
 
                 <div className="relative z-0 w-full mb-6 group">
@@ -102,13 +130,13 @@ const RegisterPage = () => {
                   >
                     Password<span className="text-red-500">*</span>
                   </label>
+                  {errors.password && <div className="text-red-500">{errors.password}</div>}
                 </div>
 
                 <div>
                   {errors.password && touched.password && errors.password}
                   <button
                     type="submit"
-                    disabled={isSubmitting}
                     className="flex w-full justify-center rounded-md bg-cyanLight px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Sign Up
