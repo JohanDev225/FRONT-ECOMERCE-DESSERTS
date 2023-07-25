@@ -16,6 +16,8 @@ export const authSlice = createSlice({
         login: (state, {payload}) => {
             state.status = 'authenticated';
             state.uid = payload.token;
+            state.role = payload.role;
+            state.expired = payload.expired;
             state.message = {
                 type: 'login-success',
                 text: payload.message,

@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-//import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { LayoutBF } from "../layouts";
@@ -10,8 +10,6 @@ import _ from "lodash";
 
 const Products = () => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
-
-  //const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -33,14 +31,18 @@ const Products = () => {
       if (previousCategory !== category) {
         return (
           <div key={id + i} className="md:col-span-3 lg:col-span-4 row-span-2">
-            <p className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl underline underline-offset-3 decoration-8 decoration-blue-400">{category}</p>
+            <p className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl underline underline-offset-3 decoration-8 decoration-cyan">
+              {category}
+            </p>
           </div>
         );
       }
     } else {
       return (
         <div key={id + i} className="md:col-span-3 lg:col-span-4 row-span-2">
-          <p className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl underline underline-offset-3 decoration-8 decoration-blue-400">{category}</p>
+          <p className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl underline underline-offset-3 decoration-8 decoration-cyan">
+            {category}
+          </p>
         </div>
       );
     }
@@ -83,7 +85,7 @@ const Products = () => {
     <LayoutBF>
       <section>
         <div className="container mx-auto px-3 mb-12">
-          <h2 className="text-3xl md:text-6xl mb-4 font-bold text-center text-transparent bg-clip-text bg-gradient-to-r to-cyan from-darkOrange">
+          <h2 className="text-3xl md:text-6xl mb-4 font-bold text-center text-transparent bg-clip-text bg-gradient-to-r to-cyan from-cyanLight">
             Our Cravs
           </h2>
 
@@ -95,7 +97,7 @@ const Products = () => {
               <img
                 className="object-scale-down h-10 w-10"
                 src={`${assetsPath}/pastel.png`}
-                alt=""
+                alt="Image with a little smiley cake"
               />
             </button>
 
@@ -112,27 +114,38 @@ const Products = () => {
           </div>
 
           <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-            {search === ""
-              ? prods.map((dessert, i) => (
-                  <Product
-                    key={`desset-list-${dessert._id}`}
-                    dessert={dessert}
-                    showHeading={showHeading}
-                    i={i}
-                  />
-                ))
-              : filteredDesserts(desserts).map((dessert) => (
-                  <Product
-                    key={`desset-list-${dessert._id}`}
-                    dessert={dessert}
-                    showHeading={showHeading}
-                  />
-                ))}
+            {search === "" && prods.length > 0 ? (
+              prods.map((dessert, i) => (
+                <Product
+                  key={`desset-list-${dessert._id}`}
+                  dessert={dessert}
+                  showHeading={showHeading}
+                  i={i}
+                />
+              ))
+            ) : search !== "" && filteredDesserts(desserts).length > 0 ? (
+              filteredDesserts(desserts).map((dessert) => (
+                <Product
+                  key={`desset-list-${dessert._id}`}
+                  dessert={dessert}
+                  showHeading={showHeading}
+                />
+              ))
+            ) : (
+              <div className="md:col-span-3 lg:col-span-4 row-span-2 text-center">
+                <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl underline underline-offset-3 decoration-8 decoration-cyan">We are baking new cravs</h1>
+                <img
+                  className="object-scale-down h-96 w-full"
+                  src={`${assetsPath}/empty.svg`}
+                  alt="Image that says we are baking new cravs because the search is empty"
+                />
+              </div>
+            )}
           </div>
         </div>
         {/*Valida que search no este vacio y que la cantidad de desserts sean mayores a 8 para crear la paginacion*/}
         {search !== "" && desserts.length > 8 && (
-          <div className="flex justify-center">
+          <div className="flex justify-center p-10">
             <button
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
               onClick={prevPage}

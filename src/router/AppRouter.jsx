@@ -11,7 +11,7 @@ export const AppRouter = () => {
         {/* Login y Registro */}
         <Route path="/auth/*" element={ <AuthRoutes /> } />
 
-        {/* BrickFactoryApp */}
+        {/* BlissfullCravs */}
         <Route path="/*" element={ <BKCRoutes /> } />
 
     </Routes>

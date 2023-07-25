@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,14 @@ import { BiCartAlt } from "react-icons/bi";
 import { isExpired, decodeToken } from "react-jwt";
 
 import { isAuth, getUserInfo } from "../../store";
+import Cart from "../components/cart/Cart";
+
 const LayoutBF = ({ children }) => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
 
   const { uid, role, expired } = useSelector((state) => state.auth);
 
+  const [open, setOpen] = useState(false);
   //setear token
   const token = localStorage.getItem("token");
 
@@ -21,10 +24,10 @@ const LayoutBF = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token && token !== uid) {
+    if (token !== uid) {
       dispatchUserInfo();
     }
-  }, [token, uid, dispatch]);
+  }, [token, uid]);
 
   useEffect(() => {
     if (expired) {
@@ -33,7 +36,6 @@ const LayoutBF = ({ children }) => {
     }
   }, [expired]);
 
-
   const dispatchUserInfo = useCallback(() => {
     if (token) {
       dispatch(isAuth(token));
@@ -41,14 +43,13 @@ const LayoutBF = ({ children }) => {
     }
   }, [dispatch, token]);
 
-
   const myDecodedToken = () => {
     const infoUser = {
       role: decodeToken(token).role,
       expired: isExpired(token),
     };
     return infoUser;
-};
+  };
 
   return (
     <div>
@@ -68,12 +69,12 @@ const LayoutBF = ({ children }) => {
                   Products
                 </NavLink>
                 {uid && role === "Admin" && (
-                <NavLink
-                  to="/dashboard"
-                  className="text-graylight hover:text-darkOrange"
-                >
-                  DashBoard
-                </NavLink>
+                  <NavLink
+                    to="/dashboard"
+                    className="text-graylight hover:text-darkOrange"
+                  >
+                    DashBoard
+                  </NavLink>
                 )}
               </div>
             </div>
@@ -95,12 +96,15 @@ const LayoutBF = ({ children }) => {
                   </NavLink>
                 </>
               ) : (
-                <NavLink
-                  to="/auth/login"
-                  className="text-3xl text-graylight hover:text-darkOrange"
-                >
-                  <BiCartAlt />
-                </NavLink>
+                <>
+                  <button
+                    className="text-3xl text-graylight hover:text-darkOrange"
+                    onClick={() => setOpen(true)}
+                  >
+                    <BiCartAlt />
+                  </button>
+                  <Cart open={open} setOpen={setOpen} />
+                </>
               )}
             </div>
 

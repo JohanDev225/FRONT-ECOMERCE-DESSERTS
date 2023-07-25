@@ -5,8 +5,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        cyan: 'hsl(183, 83%, 53%)',
-        cyanLight: 'hsl(182, 91%, 36%)',
+        cyan: 'hsl(182, 91%, 36%)',
+        cyanLight: 'hsl(168, 84%, 78%)',
         darkGray: 'hsl(245, 16%, 29%)',
         orangeLigth: 'hsl(26, 84%, 78%)',
         darkOrange: 'hsl(39, 82%, 66%)'
@@ -17,7 +17,7 @@ export default {
         danger: "#e3342f",
       },
       backgroundImage: (theme) => ({
-        "footer": "url('./src/images/bg-footer.jpg')",
+        "footer": "url('./images/bg-footer.jpg')",
       }),
       fontFamily: {
         sans: ["Raleway", "sans-serif"],

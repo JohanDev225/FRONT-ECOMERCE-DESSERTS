@@ -1,10 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import { useSelector } from "react-redux";
-import ProtectedRoute from "./ProtectedRoute"
+import ProtectedRoute from "../../router/ProtectedRoute";
 
 import HomePage from "../pages/HomePage"
 import Products from "../pages/Products"
 import Dashboard from "../pages/Dashboard"
+
 
 //import Dev from "../pages/Dev"
 
@@ -25,7 +26,7 @@ export const BKCRoutes = () => {
               </ProtectedRoute>
             }
           />
-        <Route path="/*" element={ <Navigate to="/" /> } />
+        <Route path="/*" element={ <Navigate to="/" replace={true}/> } />
     </Routes>
   )
 }
