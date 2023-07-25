@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { useEffect, useCallback } from "react";
 import { NavLink } from "react-router-dom";
@@ -11,7 +12,7 @@ import { isAuth, getUserInfo } from "../../store";
 const LayoutBF = ({ children }) => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
 
-  const { uid, expired } = useSelector((state) => state.auth);
+  const { uid, role, expired } = useSelector((state) => state.auth);
 
   //setear token
   const token = localStorage.getItem("token");
@@ -19,24 +20,11 @@ const LayoutBF = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const myDecodedToken = () => {
-      const infoUser = {
-        role: decodeToken(token).role,
-        expired: isExpired(token),
-      };
-      return infoUser;
-  };
-
-  const dispatchUserInfo = useCallback(() => {
-    if (token) {
-      dispatch(isAuth(token));
-      dispatch(getUserInfo(myDecodedToken()));
-    }
-  }, [token]);
-
   useEffect(() => {
-    dispatchUserInfo();
-  }, [dispatchUserInfo]);
+    if (token && token !== uid) {
+      dispatchUserInfo();
+    }
+  }, [token, uid, dispatch]);
 
   useEffect(() => {
     if (expired) {
@@ -44,6 +32,23 @@ const LayoutBF = ({ children }) => {
       navigate("/", { replace: true });
     }
   }, [expired]);
+
+
+  const dispatchUserInfo = useCallback(() => {
+    if (token) {
+      dispatch(isAuth(token));
+      dispatch(getUserInfo(myDecodedToken()));
+    }
+  }, [dispatch, token]);
+
+
+  const myDecodedToken = () => {
+    const infoUser = {
+      role: decodeToken(token).role,
+      expired: isExpired(token),
+    };
+    return infoUser;
+};
 
   return (
     <div>
@@ -62,6 +67,14 @@ const LayoutBF = ({ children }) => {
                 >
                   Products
                 </NavLink>
+                {uid && role === "Admin" && (
+                <NavLink
+                  to="/dashboard"
+                  className="text-graylight hover:text-darkOrange"
+                >
+                  DashBoard
+                </NavLink>
+                )}
               </div>
             </div>
 

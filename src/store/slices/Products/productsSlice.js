@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const productsSlice = createSlice({
-    name: 'auth',
+    name: 'products',
     initialState: {
-        products: [],
+        desserts: [],
     },
     reducers: {
         products: (state, {payload}) => {
-            state.products = payload;
+            state.desserts = payload;
         },
     },
-    });
+});
 
-    export const { login, register, userInfo, logout, bad } = productsSlice.actions;
+export const { products } = productsSlice.actions;

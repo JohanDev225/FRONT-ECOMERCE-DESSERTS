@@ -1,82 +1,152 @@
+import { useEffect, useState } from "react";
+//import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import { LayoutBF } from "../layouts";
+import { getProducts } from "../../store";
+import Product from "../components/Product";
+
+import _ from "lodash";
+
 const Products = () => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
+
+  //const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [search, setSearch] = useState("");
+
+  //traer la propiedad desserts del estado
+  const { desserts } = useSelector((state) => state.products);
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, []);
+
+  const prods = _.sortBy(desserts, "category");
+
+  const showHeading = (id, category, i) => {
+    if (i > 0) {
+      const previousCategory = prods[i - 1].category;
+      if (previousCategory !== category) {
+        return (
+          <div key={id + i} className="md:col-span-3 lg:col-span-4 row-span-2">
+            <p className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl underline underline-offset-3 decoration-8 decoration-blue-400">{category}</p>
+          </div>
+        );
+      }
+    } else {
+      return (
+        <div key={id + i} className="md:col-span-3 lg:col-span-4 row-span-2">
+          <p className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl underline underline-offset-3 decoration-8 decoration-blue-400">{category}</p>
+        </div>
+      );
+    }
+  };
+
+  const filteredDesserts = (desserts) => {
+    const filtered = desserts.filter((dessert) =>
+      dessert.name.toLowerCase().includes(search.toLowerCase())
+    );
+    //si no encuentra nada, devuelve un array filtrando por tag
+    if (filtered.length === 0) {
+      return desserts.filter((dessert) =>
+        dessert.tags.some((tag) =>
+          tag.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+    return filtered.slice(currentPage, currentPage + 8);
+  };
+
+  const nextPage = () => {
+    if (
+      desserts.filter((dessert) => dessert.name.includes(search)).length >
+      currentPage + 8
+    ) {
+      setCurrentPage(currentPage + 8);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 8);
+  };
+
+  const onSearchChange = ({ target }) => {
+    setCurrentPage(0);
+    setSearch(target.value);
+  };
+
   return (
     <LayoutBF>
       <section>
         <div className="container mx-auto px-3 mb-12">
-          <h2 className="text-3xl md:text-6xl mb-4 font-bold text-center">
-            Our List of Little Cravs
+          <h2 className="text-3xl md:text-6xl mb-4 font-bold text-center text-transparent bg-clip-text bg-gradient-to-r to-cyan from-darkOrange">
+            Our Cravs
           </h2>
-          <div className="flex justify-center pb-5">
-            <img
-              className="object-scale-down h-13 w-20 md:h-24 md:w-45"
-              src={`${assetsPath}/pastel.png`}
-              alt=""
-            />
-          </div>
-          <div className="grid md:grid-cols-3 lg:grid-cols-4 grid-rows-2 gap-4 w-100 ">
-            <div className="wrapper antialiased text-gray-900 hover:opacity-90 cursor-pointer">
-              {/*Map de Productos */}
-              <div>
-                <img
-                  src="https://www.luisapostres.com/cdn/shop/files/birthdayfoto.jpg?v=1688740933&width=600"
-                  alt=" random imgee"
-                  className="w-full object-cover object-center rounded-lg shadow-md"
-                />
 
-                <div className="relative px-4 -mt-16  ">
-                  <div className="bg-white p-6 rounded-lg shadow-lg">
-                    <div className="flex items-baseline">
-                      <span className="bg-teal-200 text-teal-800 text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
-                        Avilable
-                      </span>
-                      <div className="ml-2 text-gray-600 uppercase text-xs font-semibold tracking-wider">
-                        Category
-                      </div>
-                    </div>
+          <div className="flex py-10">
+            <button
+              className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
+              type="button"
+            >
+              <img
+                className="object-scale-down h-10 w-10"
+                src={`${assetsPath}/pastel.png`}
+                alt=""
+              />
+            </button>
 
-                    <h4 className="mt-1 text-xl font-semibold uppercase leading-tight truncate">
-                      A random Title
-                    </h4>
-
-                    <div className="mt-1">
-                      $1800
-                      <span className="text-gray-600 text-sm"> /COP</span>
-                    </div>
-                    <div className="mt-4 mb-4">
-                      <span className="text-teal-600 text-md font-semibold">
-                        4/10 ratings{" "}
-                      </span>
-                      <span className="text-sm text-gray-600">(Sweetness)</span>
-                    </div>
-      
-                    <hr/>
-
-                    <div className="mt-4 p-1 flex flex-wrap items-center justify-evenly gap-2">
-                      <span className="bg-teal-200 text-teal-800 text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
-                        #photography
-                      </span>
-                      <span className="bg-teal-200 text-teal-800 text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
-                        #photography
-                      </span>
-                      <span className="bg-teal-200 text-teal-800 text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
-                        #photography
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div className="relative w-full">
+              <input
+                type="search"
+                className="block p-5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-cyan focus:border-cyan"
+                placeholder="Search by Name or Ingredient"
+                value={search}
+                onChange={onSearchChange}
+                required
+              />
             </div>
-            <div className="p-10 border border-blue-600 bg-blue-100">02</div>
-            <div className="p-10 border border-blue-600 bg-blue-100">03</div>
-            <div className="p-10 border border-blue-600 bg-blue-100">04</div>
-            <div className="p-10 border border-blue-600 bg-blue-100">05</div>
-            <div className="p-10 border border-blue-600 bg-blue-100">06</div>
-            <div className="p-10 border border-blue-600 bg-blue-100">07</div>
-            <div className="p-10 border border-blue-600 bg-blue-100">08</div>
+          </div>
+
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+            {search === ""
+              ? prods.map((dessert, i) => (
+                  <Product
+                    key={`desset-list-${dessert._id}`}
+                    dessert={dessert}
+                    showHeading={showHeading}
+                    i={i}
+                  />
+                ))
+              : filteredDesserts(desserts).map((dessert) => (
+                  <Product
+                    key={`desset-list-${dessert._id}`}
+                    dessert={dessert}
+                    showHeading={showHeading}
+                  />
+                ))}
           </div>
         </div>
+        {/*Valida que search no este vacio y que la cantidad de desserts sean mayores a 8 para crear la paginacion*/}
+        {search !== "" && desserts.length > 8 && (
+          <div className="flex justify-center">
+            <button
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+              onClick={prevPage}
+            >
+              Previous
+            </button>
+            <button
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
+              onClick={nextPage}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </section>
     </LayoutBF>
   );
