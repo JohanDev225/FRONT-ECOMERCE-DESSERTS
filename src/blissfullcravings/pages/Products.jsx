@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { LayoutBF } from "../layouts";
 import { getProducts } from "../../store";
-import Product from "../components/Product";
+import { Product } from "../components";
 
 import _ from "lodash";
 
@@ -113,7 +113,7 @@ const Products = () => {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
             {search === "" && prods.length > 0 ? (
               prods.map((dessert, i) => (
                 <Product

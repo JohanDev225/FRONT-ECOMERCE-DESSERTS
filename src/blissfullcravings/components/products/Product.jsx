@@ -14,15 +14,15 @@ const Product = ({ dessert, i= null, showHeading }) => {
     <>
     {i !== null && showHeading(id, category, i)}
     
-    <div className="wrapper antialiased text-gray-900 hover:opacity-90 cursor-pointer" onClick={handleProduct}>
+    <div className="wrapper antialiased text-gray-900 hover:opacity-90 cursor-pointer px-2" onClick={handleProduct}>
       <div>
         <img
           src={image}
           alt=" random imgee"
-          className="w-full object-cover object-center rounded-lg shadow-md h-96 object-cover m-2"
+          className="w-80 md:w-full rounded-lg shadow-md h-96 object-cover"
         />
 
-        <div className="relative px-4 -mt-16 ml-5">
+        <div className="relative px-4 -mt-16 w-72 md:w-full">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-baseline">
               <span className="bg-teal-200 text-teal-800 text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">

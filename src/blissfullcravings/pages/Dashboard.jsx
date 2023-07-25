@@ -1,9 +1,14 @@
-
+import Admin from "../components/adminSection/Admin";
+import { LayoutBF } from "../layouts";
 
 const Dashboard = () => {
+
+
   return (
-    <div>Dashboard</div>
-  )
+    <LayoutBF>
+        <Admin />
+    </LayoutBF>
+  );
 }
 
-export default Dashboard
+export default Dashboard;

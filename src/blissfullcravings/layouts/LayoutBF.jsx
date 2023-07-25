@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
-import { useEffect, useCallback, useState } from "react";
+import { Fragment, useEffect, useCallback, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import { Dialog, Transition } from "@headlessui/react";
 import { BiCartAlt } from "react-icons/bi";
 import { isExpired, decodeToken } from "react-jwt";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 import { isAuth, getUserInfo } from "../../store";
 import Cart from "../components/cart/Cart";
@@ -17,6 +19,7 @@ const LayoutBF = ({ children }) => {
   const { uid, role, expired } = useSelector((state) => state.auth);
 
   const [open, setOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   //setear token
   const token = localStorage.getItem("token");
 
@@ -51,9 +54,103 @@ const LayoutBF = ({ children }) => {
     return infoUser;
   };
 
+  const onHandleMenu = (e) => {
+    e.preventDefault();
+    setOpen(!open);
+    setMobileFiltersOpen(false);
+  };
+
   return (
     <div>
       <header>
+        <Transition.Root show={mobileFiltersOpen} as={Fragment}>
+          <Dialog
+            as="div"
+            className="relative z-40 lg:hidden"
+            onClose={setMobileFiltersOpen}
+          >
+            <Transition.Child
+              as={Fragment}
+              enter="transition-opacity ease-linear duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity ease-linear duration-300"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className="fixed inset-0 bg-black bg-opacity-25" />
+            </Transition.Child>
+
+            <div className="fixed inset-0 z-40 flex">
+              <Transition.Child
+                as={Fragment}
+                enter="transition ease-in-out duration-300 transform"
+                enterFrom="translate-x-full"
+                enterTo="translate-x-0"
+                leave="transition ease-in-out duration-300 transform"
+                leaveFrom="translate-x-0"
+                leaveTo="translate-x-full"
+              >
+                <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
+                  <div className="flex items-center justify-between px-4">
+                    <h2 className="text-4xl text-graylight">
+                      Menu Options
+                    </h2>
+                    <button
+                      type="button"
+                      className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+                      onClick={() => setMobileFiltersOpen(false)}
+                    >
+                      <span className="sr-only">Close menu</span>
+                      <AiOutlineCloseCircle
+                        className="h-6 w-6"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
+
+                  {/* Filters */}
+                  <form className="p-5 mt-4 border-t border-gray-200">
+
+                    <ul
+                      role="list"
+                      className="px-2 py-3 font-medium text-gray-900"
+                    >
+                      <li>
+                        <NavLink
+                          to="/products"
+                          className="text-2xl text-graylight hover:text-darkOrange"
+                        >
+                          Products
+                        </NavLink>
+                      </li>
+                      <li>
+                        {uid && role === "Admin" ? (
+                          <NavLink
+                            to="/dashboard"
+                            className="text-2xl text-graylight hover:text-darkOrange"
+                          >
+                            DashBoard
+                          </NavLink>
+                        ) : (
+                          <>
+                            <button
+                              className="text-2xl text-graylight hover:text-darkOrange"
+                              onClick={onHandleMenu}
+                            >
+                              <p>Shooping Cart</p>
+                            </button>
+                          </>
+                        )}
+                      </li>
+                    </ul>
+                  </form>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </Dialog>
+        </Transition.Root>
+        <Cart open={open} setOpen={setOpen} />
         <nav className="relative container mx-auto p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-20">
@@ -95,7 +192,7 @@ const LayoutBF = ({ children }) => {
                     Sign Up
                   </NavLink>
                 </>
-              ) : (
+              ) : uid && role !== "Admin" ? (
                 <>
                   <button
                     className="text-3xl text-graylight hover:text-darkOrange"
@@ -103,15 +200,15 @@ const LayoutBF = ({ children }) => {
                   >
                     <BiCartAlt />
                   </button>
-                  <Cart open={open} setOpen={setOpen} />
                 </>
-              )}
+              ) : null}
             </div>
 
             <button
               id="menu-btn"
               className="block hamburger lg:hidden focus:outline-none"
               type="button"
+              onClick={() => setMobileFiltersOpen(true)}
             >
               <span className="hamburger-top"></span>
               <span className="hamburger-middle"></span>
@@ -157,58 +254,6 @@ const LayoutBF = ({ children }) => {
           <img src={`${assetsPath}/logo.svg`} alt="" />
 
           <div className="flex flex-col space-y-16 md:space-x-20 md:flex-row md:space-y-0">
-            <div className="flex flex-col items-center w-full md:items-start">
-              <div className="mb-5 font-bold text-white text-lg capitalize">
-                Features
-              </div>
-              <div className="flex flex-col items-center space-y-3 md:items-start">
-                <a
-                  href="#"
-                  className="capitalize text-graylight hover:text-white"
-                >
-                  Link shortening
-                </a>
-                <a
-                  href="#"
-                  className="capitalize text-graylight hover:text-white"
-                >
-                  Branded links
-                </a>
-                <a
-                  href="#"
-                  className="capitalize text-graylight hover:text-white"
-                >
-                  Analytics
-                </a>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center w-full md:items-start">
-              <div className="mb-5 font-bold text-white text-lg capitalize">
-                Resources
-              </div>
-              <div className="flex flex-col items-center space-y-3 md:items-start">
-                <a
-                  href="#"
-                  className="capitalize text-graylight hover:text-white"
-                >
-                  Blog
-                </a>
-                <a
-                  href="#"
-                  className="capitalize text-graylight hover:text-white"
-                >
-                  Developers
-                </a>
-                <a
-                  href="#"
-                  className="capitalize text-graylight hover:text-white"
-                >
-                  Support
-                </a>
-              </div>
-            </div>
-
             <div className="flex flex-col items-center w-full md:items-start">
               <div className="mb-5 font-bold text-white text-lg capitalize">
                 Company

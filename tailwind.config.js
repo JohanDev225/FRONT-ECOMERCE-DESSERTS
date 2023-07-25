@@ -16,7 +16,7 @@ export default {
         ligthGray: "#859196",
         danger: "#e3342f",
       },
-      backgroundImage: (theme) => ({
+      backgroundImage: () => ({
         "footer": "url('./images/bg-footer.jpg')",
       }),
       fontFamily: {
@@ -33,5 +33,7 @@ export default {
       backgroundImage: ["dark"],
     },
   },
-  plugins: [],
+  plugins: [
+
+  ],
 };
