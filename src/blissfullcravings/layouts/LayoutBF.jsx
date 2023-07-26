@@ -36,15 +36,16 @@ const LayoutBF = ({ children }) => {
     if (expired) {
       localStorage.removeItem("token");
       navigate("/", { replace: true });
+      dispatch(isAuth());
     }
   }, [expired]);
 
   const dispatchUserInfo = useCallback(() => {
     if (token) {
-      dispatch(isAuth(token));
+      dispatch(isAuth());
       dispatch(getUserInfo(myDecodedToken()));
     }
-  }, [dispatch, token]);
+  }, [token]);
 
   const myDecodedToken = () => {
     const infoUser = {

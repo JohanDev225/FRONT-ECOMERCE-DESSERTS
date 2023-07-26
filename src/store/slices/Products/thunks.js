@@ -1,5 +1,5 @@
 import { backApi } from "../../../api/axiosApi";
-import { products } from "./productsSlice"
+import { products, product } from "./productsSlice"
 
 export const getProducts = () => {
     return async (dispatch) => {
@@ -17,7 +17,7 @@ export const getProductById = (id) => {
         try {
     
             const { data } = await backApi.get(`/desert/${id}`);
-            dispatch(products(data));
+            dispatch(product(data));
         } catch (error) {
             console.log(error);
         }
