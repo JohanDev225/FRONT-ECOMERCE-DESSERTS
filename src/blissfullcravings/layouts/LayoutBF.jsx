@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { Fragment, useEffect, useCallback, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,8 @@ import { BiCartAlt } from "react-icons/bi";
 import { isExpired, decodeToken } from "react-jwt";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
-import { isAuth, getUserInfo } from "../../store";
+
+import { isAuth, getUserInfo, getProducts } from "../../store";
 import Cart from "../components/cart/Cart";
 
 const LayoutBF = ({ children }) => {
@@ -61,6 +62,10 @@ const LayoutBF = ({ children }) => {
     setMobileFiltersOpen(false);
   };
 
+  const onHangleProducts = () => {
+    dispatch(getProducts());
+  };
+
   return (
     <div>
       <header>
@@ -94,9 +99,7 @@ const LayoutBF = ({ children }) => {
               >
                 <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
                   <div className="flex items-center justify-between px-4">
-                    <h2 className="text-4xl text-graylight">
-                      Menu Options
-                    </h2>
+                    <h2 className="text-4xl text-graylight">Menu Options</h2>
                     <button
                       type="button"
                       className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
@@ -112,27 +115,28 @@ const LayoutBF = ({ children }) => {
 
                   {/* Filters */}
                   <form className="p-5 mt-4 border-t border-gray-200">
-
                     <ul
                       role="list"
                       className="px-2 py-3 font-medium text-gray-900"
                     >
                       <li>
-                        <NavLink
+                        <Link
                           to="/products"
                           className="text-2xl text-graylight hover:text-darkOrange"
+                          onClick={onHangleProducts}
                         >
                           Products
-                        </NavLink>
+                        </Link>
                       </li>
                       <li>
                         {uid && role === "Admin" ? (
-                          <NavLink
+                          <Link
                             to="/dashboard"
                             className="text-2xl text-graylight hover:text-darkOrange"
+                            onClick={onHangleProducts}
                           >
                             DashBoard
-                          </NavLink>
+                          </Link>
                         ) : (
                           <>
                             <button
@@ -155,24 +159,26 @@ const LayoutBF = ({ children }) => {
         <nav className="relative container mx-auto p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-20">
-              <NavLink to="/">
+              <Link to="/">
                 <img src={`${assetsPath}/logo.svg`} alt="" />
-              </NavLink>
+              </Link>
 
               <div className="hidden space-x-8 font-bold lg:flex">
-                <NavLink
+                <Link
                   to="/products"
                   className="text-graylight hover:text-darkOrange"
+                  onClick={onHangleProducts}
                 >
                   Products
-                </NavLink>
+                </Link>
                 {uid && role === "Admin" && (
-                  <NavLink
+                  <Link
                     to="/dashboard"
                     className="text-graylight hover:text-darkOrange"
+                    onClick={onHangleProducts}
                   >
                     DashBoard
-                  </NavLink>
+                  </Link>
                 )}
               </div>
             </div>
@@ -180,18 +186,18 @@ const LayoutBF = ({ children }) => {
             <div className="hidden items-center space-x-6 font-bold text-graylight lg:flex">
               {!uid ? (
                 <>
-                  <NavLink
+                  <Link
                     to="/auth/login"
                     className="text-graylight hover:text-darkOrange"
                   >
                     Login
-                  </NavLink>
-                  <NavLink
+                  </Link>
+                  <Link
                     to="/auth/register"
                     className="px-8 py-3 font-bold text-white bg-cyan rounded-full hover:bg-cyanLight"
                   >
                     Sign Up
-                  </NavLink>
+                  </Link>
                 </>
               ) : uid && role !== "Admin" ? (
                 <>

@@ -5,6 +5,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const Admin = ({ children, setItem }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
   return (
     <div className="bg-white">
       <div>

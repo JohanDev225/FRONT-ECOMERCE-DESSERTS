@@ -5,6 +5,10 @@ export const productsSlice = createSlice({
     initialState: {
         desserts: [],
         dessert: {},
+        message: {
+            type: null,
+            text: null,
+        },
     },
     reducers: {
         products: (state, {payload}) => {
@@ -12,8 +16,14 @@ export const productsSlice = createSlice({
         },
         product : (state, {payload}) => {
             state.dessert = payload;
+        },
+        statusProduct: (state, {payload}) => {
+            state.message = {
+                type: payload.type,
+                text: payload.text,
+            };
         }
     },
 });
 
-export const { products, product } = productsSlice.actions;
+export const { products, product, statusProduct } = productsSlice.actions;

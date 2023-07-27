@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import { LayoutBF } from "../layouts";
-import { getProducts } from "../../store";
 import { Product } from "../components";
 
 import _ from "lodash";
@@ -11,7 +10,6 @@ import _ from "lodash";
 const Products = () => {
   const assetsPath = import.meta.env.VITE_ASSETS_PATH;
 
-  const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [search, setSearch] = useState("");
@@ -19,9 +17,6 @@ const Products = () => {
   //traer la propiedad desserts del estado
   const { desserts } = useSelector((state) => state.products);
 
-  useEffect(() => {
-    dispatch(getProducts());
-  }, []);
 
   const prods = _.sortBy(desserts, "category");
 
