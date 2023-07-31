@@ -71,6 +71,11 @@ const Admin = ({ children, setItem }) => {
                           New Dessert
                         </a>
                       </li>
+                      <li className="mb-5">
+                        <a onClick={() => setItem('list')} className="text-xl text-graylight hover:text-darkOrange cursor-pointer">
+                          Orders
+                        </a>
+                      </li>
                     </ul>
                   </form>
                 </Dialog.Panel>
@@ -115,6 +120,16 @@ const Admin = ({ children, setItem }) => {
                   <li>
                     <a onClick={() => setItem('create')} className="text-sm text-graylight hover:text-darkOrange cursor-pointer">
                       New Dessert
+                    </a>
+                  </li>
+                </ul>
+                <ul
+                  role="list"
+                  className="space-y-4 border-b border-gray-200 pb-6 pt-5 text-sm font-medium text-gray-900"
+                >
+                    <li>
+                    <a onClick={() => setItem('list')} className="text-sm text-graylight hover:text-darkOrange cursor-pointer">
+                      Orders
                     </a>
                   </li>
                 </ul>

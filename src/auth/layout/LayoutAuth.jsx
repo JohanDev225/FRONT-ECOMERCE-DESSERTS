@@ -12,7 +12,7 @@ const LayoutAuth = ({ children }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-20">
               <NavLink to="/">
-                <img src={`${assetsPath}/logo.svg`} alt="" />
+                <img src={`${assetsPath}/logo.png`} alt="" className="object-fit h-32 w-32"/>
               </NavLink>
             </div>
 

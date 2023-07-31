@@ -5,6 +5,7 @@ import ProtectedRoute from "../../router/ProtectedRoute";
 import HomePage from "../pages/HomePage"
 import Products from "../pages/Products"
 import Dashboard from "../pages/Dashboard"
+import Product  from "../pages/Product";
 
 
 //import Dev from "../pages/Dev"
@@ -18,6 +19,8 @@ export const BKCRoutes = () => {
     <Routes>
         <Route path="/" element={ <HomePage /> } />
         <Route path="/products" element={ <Products /> } />
+        <Route path="/product/:id" element={ <Product /> } />
+        
         <Route
             path="/dashboard"
             element={

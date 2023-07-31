@@ -1,18 +1,23 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getProductById } from "../../../store";
 
 const Product = ({ dessert, i= null, showHeading }) => {
-  const { id, name, price, image, sweet, category, tags, available } = dessert;
+  const { _id, name, price, image, sweet, category, tags, available } = dessert;
+
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleProduct = () => {
-    navigate(`/product/${id}`);
+    dispatch(getProductById(_id));
+    navigate(`/product/${_id}`);
   };
 
   return (
     <>
-    {i !== null && showHeading(id, category, i)}
+    {i !== null && showHeading(_id, category, i)}
     
     <div className="wrapper antialiased text-gray-900 hover:opacity-90 cursor-pointer px-2" onClick={handleProduct}>
       <div>
@@ -71,7 +76,7 @@ const Product = ({ dessert, i= null, showHeading }) => {
 
 Product.propTypes = {
   dessert: PropTypes.shape({
-    id: PropTypes.number,
+    _id: PropTypes.string,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,

@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { Fragment, useEffect, useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,  } from "react-router-dom";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { BiCartAlt } from "react-icons/bi";
@@ -15,9 +15,18 @@ import { isAuth, getUserInfo, getProducts } from "../../store";
 import Cart from "../components/cart/Cart";
 
 const LayoutBF = ({ children }) => {
-  const assetsPath = import.meta.env.VITE_ASSETS_PATH;
+  let assetsPath
+
+  let location = useLocation();
+  
+  if (location.pathname === "/products" || location.pathname === "/") {
+    assetsPath = import.meta.env.VITE_ASSETS_PATH;
+  }else{
+    assetsPath = import.meta.env.VITE_ASSETS_AUTH;
+  }
 
   const { uid, role, expired } = useSelector((state) => state.auth);
+  const { desserts } = useSelector((state) => state.products);
 
   const [open, setOpen] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -45,6 +54,7 @@ const LayoutBF = ({ children }) => {
     if (token) {
       dispatch(isAuth());
       dispatch(getUserInfo(myDecodedToken()));
+      dispatch(getProducts());
     }
   }, [token]);
 
@@ -63,7 +73,9 @@ const LayoutBF = ({ children }) => {
   };
 
   const onHangleProducts = () => {
-    dispatch(getProducts());
+    if (desserts.length === 0) {
+      dispatch(getProducts());
+    }
   };
 
   return (
@@ -160,7 +172,7 @@ const LayoutBF = ({ children }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-20">
               <Link to="/">
-                <img src={`${assetsPath}/logo.svg`} alt="" />
+              <img src={`${assetsPath}/logo.png`} className="object-fit h-32 w-32" alt="" />
               </Link>
 
               <div className="hidden space-x-8 font-bold lg:flex">
@@ -258,7 +270,7 @@ const LayoutBF = ({ children }) => {
 
       <footer className="py-16 bg-darkOrange">
         <div className="container flex flex-col items-center justify-between mx-auto space-y-16 md:flex-row md:space-y-0 md:items-start">
-          <img src={`${assetsPath}/logo.svg`} alt="" />
+        <img src={`${assetsPath}/logo.png`} alt="" className="object-fit h-32 w-32"/>
 
           <div className="flex flex-col space-y-16 md:space-x-20 md:flex-row md:space-y-0">
             <div className="flex flex-col items-center w-full md:items-start">
