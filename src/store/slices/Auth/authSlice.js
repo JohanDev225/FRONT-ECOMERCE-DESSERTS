@@ -5,6 +5,7 @@ export const authSlice = createSlice({
     initialState: {
         status: 'not-authenticated', // 'not-authenticated' | 'authenticated' | 'registered'
         uid: null,
+        idUser: null,
         role: null,
         expired: false,
         message: {
@@ -16,6 +17,7 @@ export const authSlice = createSlice({
         login: (state, {payload}) => {
             state.status = 'authenticated';
             state.uid = payload.token;
+            state.idUser = payload.id;
             state.role = payload.role;
             state.expired = payload.expired;
             state.message = {
@@ -31,12 +33,20 @@ export const authSlice = createSlice({
             };
         },
         userInfo: (state, {payload}) => {
+            state.idUser = payload.idUser;
             state.role = payload.role;
             state.expired = payload.expired;
         },
         logout: (state) => {
             state.status = 'non-authenticated';
             state.uid = null;
+            state.idUser = null;
+            state.role = null;
+            state.expired = false;
+            state.message = {
+                type: null,
+                text: null,
+            };
         },
         bad: (state, {payload}) => {
             state.status = 'error-form';

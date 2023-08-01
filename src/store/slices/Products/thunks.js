@@ -1,5 +1,6 @@
 import { backApi } from "../../../api/axiosApi";
 import { products, product, statusProduct } from "./productsSlice"
+import { getCart } from "../Cart/thunks";
 
 export const getProducts = () => {
     return async (dispatch) => {
@@ -83,6 +84,41 @@ export const deleteProduct = (id) => {
         } finally {
             const { data } = await backApi.get('/deserts');
             dispatch(products(data));
+        }
+    }
+}
+
+export const wishProduct = (values) => {
+    return async (dispatch, getState) => {
+        try {
+            const { uid, idUser } = getState().auth;
+            await backApi.post(`/user/${idUser}/wishlist`, values ,{
+                headers: {
+                  'Authorization': `${uid}` 
+                }
+              });  
+              const message = {
+                type: 'wish-done',
+                text: 'Product Wished successfully',
+              };
+            dispatch(getCart());
+            dispatch(statusProduct(message));
+        } catch (error) {
+            if (error.response.status === 400) {
+                const message = {
+                    type: 'wish-error',
+                    text: 'Product already wished',
+                };
+                dispatch(statusProduct(message));
+            }
+        } finally {
+            setTimeout(() => {
+            const message = {
+                type: null,
+                text: null,
+              };
+                dispatch(statusProduct(message));
+            }, 1000);
         }
     }
 }

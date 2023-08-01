@@ -36,6 +36,7 @@ export const signIn = (values) => {
       } else {
         const infoUser = {
           token: data.token,
+          id: decodeToken(data.token).id,
           role: decodeToken(data.token).role,
           expired: isExpired(data.token),
           message: data.message,
@@ -69,6 +70,8 @@ export const isAuth = () => {
       if (token) {
         const data = { token };
         dispatch(login(data));
+      }else{
+        dispatch(logout());
       }
     } catch (error) {
       console.log(error);

@@ -1,32 +1,33 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import PropTypes from "prop-types";
 import { Fragment, useEffect, useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate,  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { BiCartAlt } from "react-icons/bi";
 import { isExpired, decodeToken } from "react-jwt";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { PiBowlFoodBold } from "react-icons/pi";
 
-
-import { isAuth, getUserInfo, getProducts } from "../../store";
-import Cart from "../components/cart/Cart";
+import { isAuth, getUserInfo, getProducts, getCart, getOrders } from "../../store";
+import ShoppingCart from "../components/cart/ShoppingCart";
+import MenuOpt from "../components/home/MenuOpt";
 
 const LayoutBF = ({ children }) => {
   let assetsPath
 
   let location = useLocation();
-  
+
   if (location.pathname === "/products" || location.pathname === "/") {
     assetsPath = import.meta.env.VITE_ASSETS_PATH;
-  }else{
+  } else {
     assetsPath = import.meta.env.VITE_ASSETS_AUTH;
   }
 
   const { uid, role, expired } = useSelector((state) => state.auth);
-  const { desserts } = useSelector((state) => state.products);
+  const { desserts, message } = useSelector((state) => state.products);
 
   const [open, setOpen] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -50,16 +51,29 @@ const LayoutBF = ({ children }) => {
     }
   }, [expired]);
 
+  useEffect(() => {
+    if (message.type === "wish-done") {
+      setOpen(true)
+    }
+  }, [message]);
+
   const dispatchUserInfo = useCallback(() => {
     if (token) {
-      dispatch(isAuth());
-      dispatch(getUserInfo(myDecodedToken()));
-      dispatch(getProducts());
+      dispatchHandle()
     }
   }, [token]);
 
+  const dispatchHandle = useCallback(() => {
+    dispatch(isAuth());
+    dispatch(getUserInfo(myDecodedToken()));
+    dispatch(getProducts());
+    dispatch(getCart());
+    dispatch(getOrders())
+  }, []);
+
   const myDecodedToken = () => {
     const infoUser = {
+      idUser: decodeToken(token).id,
       role: decodeToken(token).role,
       expired: isExpired(token),
     };
@@ -76,6 +90,12 @@ const LayoutBF = ({ children }) => {
     if (desserts.length === 0) {
       dispatch(getProducts());
     }
+  };
+
+  const onHandleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/", { replace: true });
+    dispatch(isAuth());
   };
 
   return (
@@ -167,35 +187,33 @@ const LayoutBF = ({ children }) => {
             </div>
           </Dialog>
         </Transition.Root>
-        <Cart open={open} setOpen={setOpen} />
+        <ShoppingCart open={open} setOpen={setOpen} />
         <nav className="relative container mx-auto p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-20">
               <Link to="/">
-              <img src={`${assetsPath}/logo.png`} className="object-fit h-32 w-32" alt="" />
+                <img src={`${assetsPath}/logo.png`} className="object-fit h-32 w-32" alt="" />
               </Link>
-
-              <div className="hidden space-x-8 font-bold lg:flex">
-                <Link
-                  to="/products"
-                  className="text-graylight hover:text-darkOrange"
-                  onClick={onHangleProducts}
-                >
-                  Products
-                </Link>
-                {uid && role === "Admin" && (
-                  <Link
-                    to="/dashboard"
-                    className="text-graylight hover:text-darkOrange"
-                    onClick={onHangleProducts}
-                  >
-                    DashBoard
-                  </Link>
-                )}
-              </div>
             </div>
 
             <div className="hidden items-center space-x-6 font-bold text-graylight lg:flex">
+              <Link
+                to="/products"
+                className="text-xl text-graylight flex items-center hover:text-darkOrange"
+                onClick={onHangleProducts}
+              >
+                <span className="text-sm mr-2">Products</span>
+                <PiBowlFoodBold />
+              </Link>
+              {uid && role === "Admin" && (
+                <Link
+                  to="/dashboard"
+                  className="text-graylight hover:text-darkOrange"
+                  onClick={onHangleProducts}
+                >
+                  DashBoard
+                </Link>
+              )}
               {!uid ? (
                 <>
                   <Link
@@ -211,16 +229,24 @@ const LayoutBF = ({ children }) => {
                     Sign Up
                   </Link>
                 </>
-              ) : uid && role !== "Admin" ? (
+
+              ) : uid && role !== "Admin" && (
                 <>
                   <button
-                    className="text-3xl text-graylight hover:text-darkOrange"
+                    className="text-xl text-graylight flex items-center hover:text-darkOrange"
                     onClick={() => setOpen(true)}
                   >
+                    <span className="text-sm mr-2">Cart</span>
                     <BiCartAlt />
                   </button>
+
                 </>
-              ) : null}
+              )}
+              {uid && (
+                  <MenuOpt onHandleLogout={onHandleLogout}/>
+              )}
+
+
             </div>
 
             <button
@@ -234,35 +260,6 @@ const LayoutBF = ({ children }) => {
               <span className="hamburger-bottom"></span>
             </button>
           </div>
-
-          <div
-            id="menu"
-            className="absolute hidden p-6 rounded-lg bg-darkViolet left-6 right-6 top-20 z-100"
-          >
-            <div className="flex flex-col items-center justify-center w-full space-y-6 font-bold text-white rounded-sm">
-              <a href="#" className="w-full text-center">
-                Features
-              </a>
-              <a href="#" className="w-full text-center">
-                Pricing
-              </a>
-              <a href="#" className="w-full text-center">
-                Resources
-              </a>
-              <a
-                href="#"
-                className="w-full pt-6 border-t border-gray-400 text-center"
-              >
-                Login
-              </a>
-              <a
-                href="#"
-                className="w-full py-3 text-center rounded-full bg-cyan"
-              >
-                Sign Up
-              </a>
-            </div>
-          </div>
         </nav>
       </header>
 
@@ -270,7 +267,7 @@ const LayoutBF = ({ children }) => {
 
       <footer className="py-16 bg-darkOrange">
         <div className="container flex flex-col items-center justify-between mx-auto space-y-16 md:flex-row md:space-y-0 md:items-start">
-        <img src={`${assetsPath}/logo.png`} alt="" className="object-fit h-32 w-32"/>
+          <img src={`${assetsPath}/logo.png`} alt="" className="object-fit h-32 w-32" />
 
           <div className="flex flex-col space-y-16 md:space-x-20 md:flex-row md:space-y-0">
             <div className="flex flex-col items-center w-full md:items-start">

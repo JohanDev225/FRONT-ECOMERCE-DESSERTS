@@ -7,7 +7,7 @@ import _ from "lodash";
 import { LayoutBF } from "../layouts";
 import { Product } from "../components";
 import { getProducts } from "../../store";
-
+import { toast } from "react-toastify";
 
 
 const Products = () => {
@@ -16,15 +16,17 @@ const Products = () => {
   const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(0);
+  const [isDeleteToastShown, setIsDeleteToastShown] = useState(false);
+  const [isEditToastShown, setIsEditToastShown] = useState(false);
   const [search, setSearch] = useState("");
+  
 
   //traer la propiedad desserts del estado
-  const { desserts } = useSelector((state) => state.products);
+  const { desserts, message } = useSelector((state) => state.products);
 
   useEffect(() => {
     if (desserts.length === 0) {
       dispatch(getProducts());
-      console.log("getProducts");
     }
   }, [desserts]);
 
@@ -86,8 +88,21 @@ const Products = () => {
     setSearch(target.value);
   };
 
+  const showToast = () => {
+    if (message) {
+      if (message.type === 'wish-done' && !isEditToastShown) {
+        toast(`${message.text}`);
+        setIsEditToastShown(true);
+      } else if (message.type === 'wish-error' && !isDeleteToastShown) {
+        toast(`${message.text}`, { type: "error" });
+        setIsDeleteToastShown(true);
+      }
+    }
+  };
+
   return (
     <LayoutBF>
+      { message && showToast()}
       <section>
         <div className="container mx-auto px-3 mb-12">
           <h2 className="text-3xl md:text-6xl mb-4 font-bold text-center text-transparent bg-clip-text bg-gradient-to-r to-cyan from-cyanLight">
