@@ -2,9 +2,17 @@ import { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { getListOrders } from "../../../store"
 
 const Admin = ({ children, setItem }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const onHandleList = () => {
+    dispatch(getListOrders())
+    setItem('orders')
+  }
 
   return (
     <div className="bg-white">
@@ -72,7 +80,7 @@ const Admin = ({ children, setItem }) => {
                         </a>
                       </li>
                       <li className="mb-5">
-                        <a onClick={() => setItem('list')} className="text-xl text-graylight hover:text-darkOrange cursor-pointer">
+                        <a onClick={onHandleList} className="text-xl text-graylight hover:text-darkOrange cursor-pointer">
                           Orders
                         </a>
                       </li>
@@ -128,7 +136,7 @@ const Admin = ({ children, setItem }) => {
                   className="space-y-4 border-b border-gray-200 pb-6 pt-5 text-sm font-medium text-gray-900"
                 >
                     <li>
-                    <a onClick={() => setItem('list')} className="text-sm text-graylight hover:text-darkOrange cursor-pointer">
+                    <a onClick={onHandleList} className="text-sm text-graylight hover:text-darkOrange cursor-pointer">
                       Orders
                     </a>
                   </li>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LayoutBF } from "../layouts";
 import { useDispatch, useSelector } from "react-redux";
-import { Admin, List, Edit, Create } from "../components/adminSection";
+import { Admin, List, Edit, Create, Orders } from "../components/adminSection";
 import { getProductById, createProduct, updateProduct, deleteProduct } from "../../store";
 import { toast } from "react-toastify";
 
@@ -38,13 +38,19 @@ const Dashboard = () => {
   const showToast = () => {
     if (message) {
       if (message.type === 'edit' && !isEditToastShown) {
-        toast(`Mensaje de edición: ${message.text}`);
+        toast(`${message.text}`);
         setIsEditToastShown(true);
       } else if (message.type === 'delete' && !isDeleteToastShown) {
-        toast(`Mensaje de eliminación: ${message.text}`);
+        toast(`${message.text}`);
         setIsDeleteToastShown(true);
-      } else if (message.type === 'create') {
-        toast(`Mensaje de creación: ${message.text}`);
+      } else if (message.type === 'create' && !isDeleteToastShown) {
+        toast(`${message.text}`);
+        setIsDeleteToastShown(true);
+      } else if (message.type === 'error'&& !isDeleteToastShown) {
+        toast(`${message.text}`);
+        setIsDeleteToastShown(true);
+      } else if (message.type === 'success-order' && !isDeleteToastShown) {
+        toast(`${message.text}`);
         setIsDeleteToastShown(true);
       }
     }
@@ -62,7 +68,9 @@ const Dashboard = () => {
             return <Create onHandleCreate={onHandleCreate}/>
           case 'edit':
             return <Edit initialValues={initialValues} onHandleEdit={onHandleEdit}/>
-          default:
+          case 'orders':
+            return <Orders />
+            default:
             return null
         }
       })()}

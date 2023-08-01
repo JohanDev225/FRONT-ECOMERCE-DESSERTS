@@ -177,8 +177,20 @@ const LayoutBF = ({ children }) => {
                             >
                               <p>Shooping Cart</p>
                             </button>
+                            <Link
+                              to="/myorders"
+                              className="text-2xl text-graylight hover:text-darkOrange"
+                            >
+                              MyOrders
+                            </Link>
                           </>
                         )}
+                        <button
+                          className="text-2xl text-graylight hover:text-darkOrange"
+                          onClick={onHandleLogout}
+                        >
+                          <p>Sign Out</p>
+                        </button>
                       </li>
                     </ul>
                   </form>
@@ -239,11 +251,10 @@ const LayoutBF = ({ children }) => {
                     <span className="text-sm mr-2">Cart</span>
                     <BiCartAlt />
                   </button>
-
                 </>
               )}
               {uid && (
-                  <MenuOpt onHandleLogout={onHandleLogout}/>
+                <MenuOpt role={role} onHandleLogout={onHandleLogout} />
               )}
 
 
