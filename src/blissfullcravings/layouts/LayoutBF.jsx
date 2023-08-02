@@ -169,7 +169,7 @@ const LayoutBF = ({ children }) => {
                           >
                             DashBoard
                           </Link>
-                        ) : (
+                        ) : uid && (
                           <>
                             <button
                               className="text-2xl text-graylight hover:text-darkOrange"
@@ -185,13 +185,36 @@ const LayoutBF = ({ children }) => {
                             </Link>
                           </>
                         )}
+                      </li>
+                      {uid ? (
+
                         <button
                           className="text-2xl text-graylight hover:text-darkOrange"
                           onClick={onHandleLogout}
                         >
                           <p>Sign Out</p>
                         </button>
-                      </li>
+                      ) : (
+                        <>
+                          <li>
+
+                            <Link
+                              to="/auth/login"
+                              className="text-2xl text-graylight hover:text-darkOrange"
+                            >
+                              Login
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              to="/auth/register"
+                              className="text-2xl text-cyan underline underline-offset-3 decoration-2 decoration-cyan hover:text-gray-500"
+                            >
+                              Sign Up
+                            </Link>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   </form>
                 </Dialog.Panel>
