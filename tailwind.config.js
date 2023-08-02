@@ -17,7 +17,7 @@ export default {
         danger: "#e3342f",
       },
       backgroundImage: () => ({
-        "footer": "url('./images/bg-footer.jpg')",
+        "footer": "url('../images/bg-footer.jpg')",
       }),
       fontFamily: {
         sans: ["Raleway", "sans-serif"],
