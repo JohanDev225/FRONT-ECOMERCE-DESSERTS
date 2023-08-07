@@ -11,7 +11,7 @@ const List = ({ onHandleById, onHandleDelete }) => {
       <ul role="list" className="divide-y divide-gray-100">
         {desserts.map((dessert) => (
           <div key={dessert._id}>
-            <li className="flex justify-between gap-x-6 py-5">
+            <li className="flex justify-around flex-wrap gap-x-6 py-5">
               <div className="flex gap-x-4">
                 <img
                   className="h-12 w-12 flex-none rounded-full bg-gray-50"
@@ -22,7 +22,7 @@ const List = ({ onHandleById, onHandleDelete }) => {
                   <p className="text-sm font-semibold leading-6 text-gray-900">
                     {dessert.name}
                   </p>
-                  <p className="mt-1 truncate text-xs leading-5 text-gray-500 w-96">
+                  <p className="mt-1 truncate text-xs leading-5 text-gray-500 w-32 md:w-96">
                     {dessert.description}
                   </p>
                   <div className="mt-4 p-1 flex-wrap gap-2">
