@@ -23,7 +23,7 @@ const Orders = () => {
         <ul role="list" className="divide-y divide-gray-100">
             {listOrders.map((order) => (
                 <li key={order.id} className="flex justify-between gap-x-6 py-5">
-                    <div className="flex gap-x-4">
+                    <div className="flex gap-x-4 flex-wrap">
                         <img className="h-20 w-20 flex-none rounded-full bg-gray-50" src={`${assetsPath}/order.png`} alt="" />
                         <div className="min-w-0 flex-auto">
                             <p className="px-5 pb-2 text-sm leading-6 text-gray-900"><span className="font-bold pr-2">OrderId:</span>{order.id.slice(-6)}</p>
